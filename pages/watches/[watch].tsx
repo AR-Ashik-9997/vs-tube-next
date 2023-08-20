@@ -1,6 +1,9 @@
 import React, { ReactElement } from "react";
 import Layout from "@/layouts/default";
 import PlayList from "@/components/playlist";
+import { useRouter } from "next/router";
+import { GetStaticPaths, GetStaticProps } from "next";
+import { IPlayList } from "@/types/globalTypes";
 
 const Watch = () => {
   return (
@@ -17,13 +20,7 @@ const Watch = () => {
       </div>
       <div className="lg:col-span-4">
         <div className="max-h-96 lg:max-h-80 xl:max-h-96 2xl:max-h-[34rem] border rounded-xl p-4 overflow-y-scroll outline-none">
-          <PlayList />          
-          <PlayList />          
-          <PlayList />          
-          <PlayList />          
-          <PlayList />          
-          <PlayList />          
-          <PlayList />          
+          <PlayList />
         </div>
       </div>
     </div>
@@ -34,4 +31,30 @@ Watch.getLayout = function getLayout(page: ReactElement) {
   return <Layout>{page}</Layout>;
 };
 
+type SingleData = {
+  singleData: {};
+};
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  const res = await fetch("http://localhost:5000/api/v1/play_lists?limit=27");
+  const AllData = await res.json();
+  const paths = AllData.data.map((item: IPlayList) => ({
+    params: { watch: item.id },
+  }));
+  return { paths, fallback: false };
+};
+
+export const getStaticProps: GetStaticProps = async (context) => {
+  const { params } = context;
+
+  const res = await fetch(
+    `http://localhost:5000/api/v1/play_lists/${params.watch}`
+  );
+  const data = await res.json();  
+  return {
+    props: {
+      singleProduct: data.data,
+    },
+  };
+};
 export default Watch;
