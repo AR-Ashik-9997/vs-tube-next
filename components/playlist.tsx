@@ -4,7 +4,7 @@ const PlayList = () => {
   return (
     <div className="flex gap-4 mt-4">
       <Image
-        src="https://i.pinimg.com/originals/71/9e/80/719e80760999b4c355a723224120eb07.png"
+        src="https://i.ibb.co/87kppBp/alone.jpg"
         width={100}
         height={10}
         alt=""
