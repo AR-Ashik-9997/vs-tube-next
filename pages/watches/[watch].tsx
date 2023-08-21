@@ -12,7 +12,7 @@ const Watch = ({ SingleData }: GetSingleData) => {
           <iframe
             allow="accelerometer; autoplay"
             allowFullScreen={true}
-            className="absolute left-0 top-0 right-0 bottom-0 w-full h-full"
+            className="absolute left-0 top-0 right-0 bottom-0 w-full h-full rounded-lg"
             src={`https://www.youtube.com/embed/${SingleData?.video}?autoplay=1`}
           ></iframe>
         </div>

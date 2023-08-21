@@ -1,5 +1,5 @@
 import { IData, IPlayList } from "@/types/globalTypes";
-import { Card, CardFooter, Image } from "@nextui-org/react";
+import { Card, Image } from "@nextui-org/react";
 import Link from "next/link";
 
 const Vmcard = ({ AllData }: IData) => {
