@@ -16,6 +16,7 @@ const Watch = ({ SingleData }: GetSingleData) => {
             src={`https://www.youtube.com/embed/${SingleData?.video}?autoplay=1`}
           ></iframe>
         </div>
+        <h1 className="text-xs xl:text-xl 2xl:text-2xl pt-4">{SingleData?.title}</h1>
       </div>
       <div className="lg:col-span-4">
         <div className="max-h-96 lg:max-h-80 xl:max-h-96 2xl:max-h-[34rem] border rounded-xl p-4 overflow-y-scroll outline-none">

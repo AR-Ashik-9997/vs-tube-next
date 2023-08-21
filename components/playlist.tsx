@@ -17,7 +17,7 @@ const PlayList = () => {
               alt={item?.title}
               className="rounded w-16 h-auto xl:w-32"
             />
-            <h1 className="text-xs">{item?.title}</h1>
+            <h1 className="text-xs xl:text-sm">{item?.title}</h1>
           </div>
         </Link>
       ))}
