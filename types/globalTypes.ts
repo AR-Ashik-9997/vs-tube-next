@@ -1,8 +1,18 @@
+import { title } from './../components/primitives';
 export interface IPlayList {
-  id:string;
+  id: string;
   image: string;
   video: string;
+  title: string;
 }
-export type IData={
-  AllData:[]
-}
+export type IData = {
+  AllData: { data: [] };
+};
+export type GetSingleData = {
+  SingleData: {
+    id: string;
+    image: string;
+    video: string;
+    title: string;
+  };
+};

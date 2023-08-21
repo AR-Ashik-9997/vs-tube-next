@@ -1,28 +1,30 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 import Layout from "@/layouts/default";
-
 import React, { ReactElement } from "react";
 import Vmcard from "@/components/vmcard";
 import { GetStaticProps } from "next";
+import { IData } from "@/types/globalTypes";
+import { useAppDispatch } from "@/redux/hooks/hooks";
+import { setData } from "@/redux/feature/playlist/playListSlice";
 
-const index = ({ allData }: any) => {
+const index = ({ AllData }: IData) => {
+  const dispatch = useAppDispatch();  
+  if (AllData?.data?.length > 0) {
+    dispatch(setData(AllData?.data));
+  }
   return (
     <section>
-      <Vmcard AllData={allData} />
+      <Vmcard AllData={AllData} />
     </section>
   );
 };
 index.getLayout = function getLayout(page: ReactElement) {
   return <Layout>{page}</Layout>;
 };
-type GetData = {
-  allData: [];
-};
 
-export const getStaticProps: GetStaticProps<{
-  allData: GetData;
-}> = async () => {
+export const getStaticProps: GetStaticProps = async () => {
   const res = await fetch("http://localhost:5000/api/v1/play_lists?limit=27");
-  const allData = await res.json();
-  return { props: { allData } };
+  const result = await res.json();
+  return { props: { AllData: result } };
 };
 export default index;

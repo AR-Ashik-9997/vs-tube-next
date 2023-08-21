@@ -1,11 +1,10 @@
-import React, { ReactElement } from "react";
+import React, { ReactElement, useState } from "react";
 import Layout from "@/layouts/default";
 import PlayList from "@/components/playlist";
-import { useRouter } from "next/router";
 import { GetStaticPaths, GetStaticProps } from "next";
-import { IPlayList } from "@/types/globalTypes";
+import { GetSingleData, IPlayList } from "@/types/globalTypes";
 
-const Watch = () => {
+const Watch = ({ SingleData }: GetSingleData) => {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 w-4/5 sm:mx-auto pt-12">
       <div className="lg:col-span-8">
@@ -14,7 +13,7 @@ const Watch = () => {
             allow="accelerometer; autoplay"
             allowFullScreen={true}
             className="absolute left-0 top-0 right-0 bottom-0 w-full h-full"
-            src="https://www.youtube.com/embed/p_dtI2bLWhY?autoplay=1"
+            src={`https://www.youtube.com/embed/${SingleData?.video}?autoplay=1`}
           ></iframe>
         </div>
       </div>
@@ -31,10 +30,6 @@ Watch.getLayout = function getLayout(page: ReactElement) {
   return <Layout>{page}</Layout>;
 };
 
-type SingleData = {
-  singleData: {};
-};
-
 export const getStaticPaths: GetStaticPaths = async () => {
   const res = await fetch("http://localhost:5000/api/v1/play_lists?limit=27");
   const AllData = await res.json();
@@ -46,14 +41,13 @@ export const getStaticPaths: GetStaticPaths = async () => {
 
 export const getStaticProps: GetStaticProps = async (context) => {
   const { params } = context;
-
   const res = await fetch(
     `http://localhost:5000/api/v1/play_lists/${params.watch}`
   );
-  const data = await res.json();  
+  const data = await res.json();
   return {
     props: {
-      singleProduct: data.data,
+      SingleData: data.data,
     },
   };
 };
