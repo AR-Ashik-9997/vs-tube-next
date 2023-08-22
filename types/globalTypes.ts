@@ -1,4 +1,3 @@
-import { title } from './../components/primitives';
 export interface IPlayList {
   id: string;
   image: string;

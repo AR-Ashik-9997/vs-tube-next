@@ -1,4 +1,5 @@
 /* eslint-disable react-hooks/rules-of-hooks */
+
 import Layout from "@/layouts/default";
 import React, { ReactElement } from "react";
 import Vmcard from "@/components/vmcard";
@@ -23,7 +24,7 @@ index.getLayout = function getLayout(page: ReactElement) {
 };
 
 export const getServerSideProps: GetServerSideProps = async () => {
-  const res = await fetch("http://localhost:5000/api/v1/play_lists?limit=27");
+  const res = await fetch("http://localhost:5000/api/v1/play_lists");
   const result = await res.json();
   return { props: { AllData: result } };
 };
