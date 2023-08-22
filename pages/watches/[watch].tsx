@@ -1,8 +1,9 @@
-import React, { ReactElement, useState } from "react";
+import React, { ReactElement } from "react";
 import Layout from "@/layouts/default";
 import PlayList from "@/components/playlist";
-import { GetStaticPaths, GetStaticProps } from "next";
-import { GetSingleData, IPlayList } from "@/types/globalTypes";
+import { GetServerSideProps} from "next";
+import { GetSingleData } from "@/types/globalTypes";
+
 
 const Watch = ({ SingleData }: GetSingleData) => {
   return (
@@ -31,17 +32,9 @@ Watch.getLayout = function getLayout(page: ReactElement) {
   return <Layout>{page}</Layout>;
 };
 
-export const getStaticPaths: GetStaticPaths = async () => {
-  const res = await fetch("http://localhost:5000/api/v1/play_lists?limit=27");
-  const AllData = await res.json();
-  const paths = AllData.data.map((item: IPlayList) => ({
-    params: { watch: item.id },
-  }));
-  return { paths, fallback: false };
-};
 
-export const getStaticProps: GetStaticProps = async (context) => {
-  const { params } = context;
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const { params }:any = context;
   const res = await fetch(
     `http://localhost:5000/api/v1/play_lists/${params.watch}`
   );

@@ -2,7 +2,7 @@
 import Layout from "@/layouts/default";
 import React, { ReactElement } from "react";
 import Vmcard from "@/components/vmcard";
-import { GetStaticProps } from "next";
+import { GetServerSideProps } from "next";
 import { IData } from "@/types/globalTypes";
 import { useAppDispatch } from "@/redux/hooks/hooks";
 import { setData } from "@/redux/feature/playlist/playListSlice";
@@ -14,7 +14,7 @@ const index = ({ AllData }: IData) => {
   }
   return (
     <section>
-      <Vmcard AllData={AllData} />
+      <Vmcard />
     </section>
   );
 };
@@ -22,7 +22,7 @@ index.getLayout = function getLayout(page: ReactElement) {
   return <Layout>{page}</Layout>;
 };
 
-export const getStaticProps: GetStaticProps = async () => {
+export const getServerSideProps: GetServerSideProps = async () => {
   const res = await fetch("http://localhost:5000/api/v1/play_lists?limit=27");
   const result = await res.json();
   return { props: { AllData: result } };
