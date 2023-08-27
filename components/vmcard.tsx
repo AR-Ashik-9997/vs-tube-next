@@ -7,7 +7,7 @@ import Link from "next/link";
 const Vmcard = () => {
   const { searchData } = useAppSelector((state) => state.playlist);
   return (
-    <div className="sm:gap-4 xl:gap-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3  xl:grid-cols-4  w-4/5 sm:mx-auto pt-12">
+    <div className="sm:gap-4 xl:gap-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3  xl:grid-cols-4  md:w-4/5 mx-auto pt-12">
       {searchData?.data?.map((item: IPlayList) => (
         <Link href={`/watches/${item.id}`} key={item?.id}>
           <Card className="w-full h-auto mb-4">

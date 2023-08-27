@@ -21,6 +21,7 @@ import {
   setSearch,
   setSearchData,
 } from "@/redux/feature/playlist/playListSlice";
+import React from "react";
 
 export const Navbar = () => {
   const { searchTerm } = useAppSelector((state) => state.playlist);
@@ -29,7 +30,7 @@ export const Navbar = () => {
     refetchOnMountOrArgChange: true,
     pollingInterval: 1000,
   });
-  const handleSearchChange = (event: any) => {
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const search = event.target.value;
     dispatch(setSearch(search));
   };

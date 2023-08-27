@@ -1,3 +1,4 @@
+
 export interface IPlayList {
   id: string;
   image: string;
@@ -15,3 +16,10 @@ export type GetSingleData = {
     title: string;
   };
 };
+
+export type IComments={
+  id:string;
+  comment:string;
+  playlistId:string;
+  updatedAt:string;
+}

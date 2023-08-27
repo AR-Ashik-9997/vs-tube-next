@@ -1,7 +1,6 @@
-/* eslint-disable @typescript-eslint/no-empty-function */
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { createSlice } from "@reduxjs/toolkit";
+import { useRouter } from "next/router";
 
 export const useCheckAuth = (auth: string | undefined): boolean => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(true);
@@ -26,18 +25,18 @@ export const useLogoutAndRedirect = (
   logoutCallback: () => void,
   homePagePath = "/"
 ) => {
-  const navigate = useNavigate();
+  const router = useRouter();
   useEffect(() => {
     const handleLogoutAndRedirect = () => {
       logoutCallback();
       localStorage.removeItem("authBookworm");
-      navigate(homePagePath);
+      router.push(homePagePath);
     };
 
     handleLogoutAndRedirect();
 
     return () => {};
-  }, [logoutCallback, homePagePath, navigate]);
+  }, [logoutCallback, homePagePath, router]);
 };
 
 interface IUserApi {

@@ -6,7 +6,23 @@ const searchApi = api.injectEndpoints({
       query: (searchTerm) => `/play_lists/?searchTerm=${searchTerm}`,
       providesTags: ["All"],
     }),
+    postComment: builder.mutation({
+      query: ({ data }) => ({
+        url: "/comments",
+        method: "POST",
+        body: data,
+      }),
+      invalidatesTags: ["All"],
+    }),
+    getPostComment: builder.query({
+      query: (id) => `/comments/${id}`,
+      providesTags: ["All"],
+    }),
   }),
 });
 
-export const { useGetSearchVideoQuery } = searchApi;
+export const {
+  useGetSearchVideoQuery,
+  usePostCommentMutation,
+  useGetPostCommentQuery,
+} = searchApi;
