@@ -7,9 +7,10 @@ import { GetServerSideProps } from "next";
 import { IData } from "@/types/globalTypes";
 import { useAppDispatch } from "@/redux/hooks/hooks";
 import { setData } from "@/redux/feature/playlist/playListSlice";
+import { SessionProvider } from "next-auth/react";
 
 const index = ({ AllData }: IData) => {
-  const dispatch = useAppDispatch();  
+  const dispatch = useAppDispatch();
   if (AllData?.data?.length > 0) {
     dispatch(setData(AllData?.data));
   }
@@ -20,7 +21,11 @@ const index = ({ AllData }: IData) => {
   );
 };
 index.getLayout = function getLayout(page: ReactElement) {
-  return <Layout>{page}</Layout>;
+  return (
+    <SessionProvider>
+      <Layout>{page}</Layout>
+    </SessionProvider>
+  );
 };
 
 export const getServerSideProps: GetServerSideProps = async () => {

@@ -1,4 +1,5 @@
 import "../styles/globals.css";
+import { SessionProvider } from "next-auth/react";
 import { NextUIProvider } from "@nextui-org/react";
 import { ThemeProvider as NextThemesProvider } from "next-themes";
 import { fontSans, fontMono } from "@/config/fonts";
@@ -21,11 +22,13 @@ export default function MyApp({ Component, pageProps }: AppPropsWithLayout) {
   return (
     <Provider store={store}>
       {getLayout(
-        <NextUIProvider>
-          <NextThemesProvider>
-            <Component {...pageProps} />
-          </NextThemesProvider>
-        </NextUIProvider>
+        <SessionProvider session={pageProps.session}>
+          <NextUIProvider>
+            <NextThemesProvider>
+              <Component {...pageProps} />
+            </NextThemesProvider>
+          </NextUIProvider>
+        </SessionProvider>
       )}
     </Provider>
   );

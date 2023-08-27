@@ -22,9 +22,12 @@ import {
   setSearchData,
 } from "@/redux/feature/playlist/playListSlice";
 import React from "react";
+import { useSession, signOut } from "next-auth/react";
+import Link from "next/link";
 
 export const Navbar = () => {
   const { searchTerm } = useAppSelector((state) => state.playlist);
+  const { data: session } = useSession();
   const dispatch = useAppDispatch();
   const { data } = useGetSearchVideoQuery(searchTerm, {
     refetchOnMountOrArgChange: true,
@@ -78,7 +81,8 @@ export const Navbar = () => {
       </NavbarContent>
 
       <NavbarContent className="basis-1 pl-4" justify="end">
-        <Dropdown placement="bottom-end">
+        {
+          session?.user?<Dropdown placement="bottom-end">
           <DropdownTrigger>
             <Avatar
               isBordered
@@ -101,11 +105,13 @@ export const Navbar = () => {
             <DropdownItem key="system">System</DropdownItem>
             <DropdownItem key="configurations">Configurations</DropdownItem>
             <DropdownItem key="help_and_feedback">Help & Feedback</DropdownItem>
-            <DropdownItem key="logout" color="danger">
+            <DropdownItem key="logout" color="danger" onClick={() => signOut()}>
               Log Out
             </DropdownItem>
           </DropdownMenu>
-        </Dropdown>
+        </Dropdown>:<Link href="/login">Login</Link>
+        }
+        
       </NavbarContent>
     </NextUINavbar>
   );
