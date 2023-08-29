@@ -23,7 +23,7 @@ export default function MyApp({ Component, pageProps }: AppPropsWithLayout) {
     <Provider store={store}>
       <SessionProvider session={pageProps.session}>
         <NextUIProvider>
-          <NextThemesProvider>
+          <NextThemesProvider enableSystem={true} attribute="class">
             {getLayout(<Component {...pageProps} />)}
           </NextThemesProvider>
         </NextUIProvider>

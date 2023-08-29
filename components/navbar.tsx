@@ -10,10 +10,12 @@ import {
   Avatar,
   Dropdown,
   DropdownTrigger,
+  Switch,
 } from "@nextui-org/react";
 
 import NextLink from "next/link";
-import { SearchIcon } from "@/components/icons";
+import { MoonFilledIcon, SearchIcon, SunFilledIcon } from "@/components/icons";
+
 import { Logo } from "@/components/icons";
 import { useGetSearchVideoQuery } from "@/redux/feature/playlist/searchApi";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks/hooks";
@@ -21,13 +23,16 @@ import {
   setSearch,
   setSearchData,
 } from "@/redux/feature/playlist/playListSlice";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useSession, signOut } from "next-auth/react";
 import Link from "next/link";
+import { useTheme } from "next-themes";
 
 export const Navbar = () => {
   const { searchTerm } = useAppSelector((state) => state.playlist);
   const { data: session } = useSession();
+  const { systemTheme, theme, setTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
   const dispatch = useAppDispatch();
   const { data } = useGetSearchVideoQuery(searchTerm, {
     refetchOnMountOrArgChange: true,
@@ -40,6 +45,29 @@ export const Navbar = () => {
   if (data?.data.length > 0) {
     dispatch(setSearchData(data?.data));
   }
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const renderThemeChanger = () => {
+    if (!mounted) return null;
+    const currentTheme = theme === "system" ? systemTheme : theme;
+    if (currentTheme === "dark") {
+      return (
+        <SunFilledIcon
+          className="cursor-pointer"
+          onClick={() => setTheme("light")}
+        />
+      );
+    } else {
+      return (
+        <MoonFilledIcon
+          className="cursor-pointer"
+          onClick={() => setTheme("dark")}
+        />
+      );
+    }
+  };
   return (
     <NextUINavbar maxWidth="2xl" position="sticky">
       <NavbarContent className="basis-1/5 sm:basis-full" justify="start">
@@ -79,39 +107,42 @@ export const Navbar = () => {
           />
         </NavbarItem>
       </NavbarContent>
-
+      {renderThemeChanger()}
       <NavbarContent className="basis-1 pl-4" justify="end">
-        {
-          session?.user?<Dropdown placement="bottom-end">
-          <DropdownTrigger>
-            <Avatar
-              isBordered
-              as="button"
-              className="transition-transform"
-              color="secondary"
-              name="Jason Hughes"
-              size="sm"
-              src={session?.user?.image||undefined}
-            />
-          </DropdownTrigger>
-          <DropdownMenu aria-label="Profile Actions" variant="flat">
-            <DropdownItem key="profile" className="h-14 gap-2">
-              <p className="font-semibold">{session?.user?.name}</p>
-              <p className="font-semibold">{session?.user?.email}</p>
-            </DropdownItem>
-            <DropdownItem key="settings">My Settings</DropdownItem>
-            <DropdownItem key="team_settings">Team Settings</DropdownItem>
-            <DropdownItem key="analytics">Analytics</DropdownItem>
-            <DropdownItem key="system">System</DropdownItem>
-            <DropdownItem key="configurations">Configurations</DropdownItem>
-            <DropdownItem key="help_and_feedback">Help & Feedback</DropdownItem>
-            <DropdownItem key="logout" color="danger" onClick={() => signOut()}>
-              Log Out
-            </DropdownItem>
-          </DropdownMenu>
-        </Dropdown>:<Link href="/login">Login</Link>
-        }
-        
+        {session?.user ? (
+          <Dropdown placement="bottom-end">
+            <DropdownTrigger>
+              <Avatar
+                isBordered
+                as="button"
+                className="transition-transform"
+                color="secondary"
+                name="Jason Hughes"
+                size="sm"
+                src={session?.user?.image || undefined}
+              />
+            </DropdownTrigger>
+            <DropdownMenu aria-label="Profile Actions" variant="flat">
+              <DropdownItem key="profile" className="h-14 gap-2">
+                <p className="font-semibold">{session?.user?.name}</p>
+                <p className="font-semibold">{session?.user?.email}</p>
+              </DropdownItem>
+              <DropdownItem key="Switch"></DropdownItem>
+              <DropdownItem key="help_and_feedback">
+                Help & Feedback
+              </DropdownItem>
+              <DropdownItem
+                key="logout"
+                color="danger"
+                onClick={() => signOut()}
+              >
+                Log Out
+              </DropdownItem>
+            </DropdownMenu>
+          </Dropdown>
+        ) : (
+          <Link href="/login">Login</Link>
+        )}
       </NavbarContent>
     </NextUINavbar>
   );
