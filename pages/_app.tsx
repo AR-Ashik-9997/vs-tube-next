@@ -21,15 +21,13 @@ export default function MyApp({ Component, pageProps }: AppPropsWithLayout) {
 
   return (
     <Provider store={store}>
-      {getLayout(
-        <SessionProvider session={pageProps.session}>
-          <NextUIProvider>
-            <NextThemesProvider>
-              <Component {...pageProps} />
-            </NextThemesProvider>
-          </NextUIProvider>
-        </SessionProvider>
-      )}
+      <SessionProvider session={pageProps.session}>
+        <NextUIProvider>
+          <NextThemesProvider>
+            {getLayout(<Component {...pageProps} />)}
+          </NextThemesProvider>
+        </NextUIProvider>
+      </SessionProvider>
     </Provider>
   );
 }
