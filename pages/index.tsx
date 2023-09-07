@@ -4,15 +4,22 @@ import Layout from "@/layouts/default";
 import React, { ReactElement } from "react";
 import Vmcard from "@/components/vmcard";
 import { GetServerSideProps } from "next";
-import { IData } from "@/types/globalTypes";
-import { useAppDispatch } from "@/redux/hooks/hooks";
-import { setData } from "@/redux/feature/playlist/playListSlice";
-import { SessionProvider } from "next-auth/react";
+import { SessionProvider, useSession } from "next-auth/react";
+import axios from "axios";
+import Cookies from "js-cookie";
 
-const index = ({ AllData }: IData) => {
-  const dispatch = useAppDispatch();
-  if (AllData?.data?.length > 0) {
-    dispatch(setData(AllData?.data));
+const index = () => {
+  const { data: session } = useSession();
+  if (session?.user) {
+    axios
+      .post(`${process.env.DB_HOST}/auth`, {
+        name: session?.user?.name,
+        email: session?.user?.email,
+        image: session?.user?.image,
+        role: "user",
+      })
+      .then((res) => Cookies.set("auth", res?.data?.data?.token))
+      .catch((err) => console.log(err));
   }
   return (
     <section>
@@ -26,11 +33,5 @@ index.getLayout = function getLayout(page: ReactElement) {
       <Layout>{page}</Layout>
     </SessionProvider>
   );
-};
-
-export const getServerSideProps: GetServerSideProps = async () => {
-  const res = await fetch("http://localhost:5000/api/v1/play_lists");
-  const result = await res.json();
-  return { props: { AllData: result } };
 };
 export default index;

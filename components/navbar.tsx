@@ -10,12 +10,9 @@ import {
   Avatar,
   Dropdown,
   DropdownTrigger,
-  Switch,
 } from "@nextui-org/react";
-
 import NextLink from "next/link";
 import { MoonFilledIcon, SearchIcon, SunFilledIcon } from "@/components/icons";
-
 import { Logo } from "@/components/icons";
 import { useGetSearchVideoQuery } from "@/redux/feature/playlist/searchApi";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks/hooks";
@@ -27,6 +24,7 @@ import React, { useEffect, useState } from "react";
 import { useSession, signOut } from "next-auth/react";
 import Link from "next/link";
 import { useTheme } from "next-themes";
+import Cookies from "js-cookie";
 
 export const Navbar = () => {
   const { searchTerm } = useAppSelector((state) => state.playlist);
@@ -134,7 +132,10 @@ export const Navbar = () => {
               <DropdownItem
                 key="logout"
                 color="danger"
-                onClick={() => signOut()}
+                onClick={() => {
+                  signOut();
+                  Cookies.remove("auth");
+                }}
               >
                 Log Out
               </DropdownItem>

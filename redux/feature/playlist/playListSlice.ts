@@ -2,12 +2,10 @@ import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 
 interface ISearch {
-  searchTerm: string;
-  AllData: { data: [] };
+  searchTerm: string;  
   searchData: { data: [] };
 }
-const initialState: ISearch = {
-  AllData: { data: [] },
+const initialState: ISearch = {  
   searchTerm: "",
   searchData: { data: [] },
 };
@@ -15,10 +13,7 @@ const initialState: ISearch = {
 const playListSlice = createSlice({
   name: "playlist",
   initialState,
-  reducers: {
-    setData: (state, action: PayloadAction<[]>) => {
-      state.AllData.data = action.payload;
-    },
+  reducers: {   
     setSearch: (state, action: PayloadAction<string>) => {
       state.searchTerm = action.payload;
     },
@@ -28,6 +23,6 @@ const playListSlice = createSlice({
   },
 });
 
-export const { setData, setSearch, setSearchData } = playListSlice.actions;
+export const { setSearch, setSearchData } = playListSlice.actions;
 
 export default playListSlice.reducer;

@@ -1,7 +1,6 @@
 import { useAppSelector } from "@/redux/hooks/hooks";
 import { IPlayList } from "@/types/globalTypes";
 import { Card, Image } from "@nextui-org/react";
-
 import Link from "next/link";
 
 const Vmcard = () => {

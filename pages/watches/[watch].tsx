@@ -1,22 +1,17 @@
 import React, { ReactElement, useState } from "react";
 import Layout from "@/layouts/default";
-import PlayList from "@/components/playlist";
 import { GetServerSideProps } from "next";
 import { GetSingleData, IComments } from "@/types/globalTypes";
 import { Button, Input } from "@nextui-org/react";
 import {
-  useGetPostCommentQuery,
   usePostCommentMutation,
 } from "@/redux/feature/playlist/searchApi";
 import Image from "next/image";
 import { readableTime } from "@/types/middleware";
+import PlayList from "@/components/playlist";
 
 const Watch = ({ SingleData }: GetSingleData) => {
-  const [comment, setComment] = useState<string>("");
-  const { data } = useGetPostCommentQuery(SingleData?.id, {
-    refetchOnMountOrArgChange: true,
-    pollingInterval: 1000,
-  });
+  const [comment, setComment] = useState<string>(""); 
   const [postComment] = usePostCommentMutation();
   const handleCommentChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const comment = event.target.value;
@@ -40,7 +35,7 @@ const Watch = ({ SingleData }: GetSingleData) => {
       e.target.reset();
     }
   };
-console.log(data);
+
   return (
     <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 w-4/5 sm:mx-auto pt-12">
       <div className="lg:col-span-8">
@@ -79,7 +74,7 @@ console.log(data);
           </div>
         </form>
         <section className="pt-12">
-          {data?.data.map((item:IComments) => (
+          {SingleData?.comments.map((item: IComments) => (
             <div className="flex items-center gap-4" key={item?.id}>
               <div>
                 <Image
@@ -116,9 +111,7 @@ Watch.getLayout = function getLayout(page: ReactElement) {
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const { params }: any = context;
-  const res = await fetch(
-    `http://localhost:5000/api/v1/play_lists/${params.watch}`
-  );
+  const res = await fetch(`${process.env.DB_HOST}/play_lists/${params.watch}`);
   const data = await res.json();
   return {
     props: {

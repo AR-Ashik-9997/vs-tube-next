@@ -1,13 +1,17 @@
-import { useAppSelector } from "@/redux/hooks/hooks";
-import { IData, IPlayList } from "@/types/globalTypes";
+import { useGetAllPlaylistsQuery } from "@/redux/feature/playlist/searchApi";
+import {  IPlayList } from "@/types/globalTypes";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 const PlayList = () => {
-  const { AllData }: IData = useAppSelector((state) => state.playlist);
+  const { data } = useGetAllPlaylistsQuery(undefined, {
+    refetchOnMountOrArgChange: true,
+    pollingInterval: 5000,
+  });
+
   return (
     <React.Fragment>
-      {AllData?.data?.map((item: IPlayList) => (
+      {data?.data?.map((item: IPlayList) => (
         <Link href={`/watches/${item.id}`} key={item?.id}>
           <div className="flex gap-4 mt-4">
             <Image
