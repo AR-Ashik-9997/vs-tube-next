@@ -11,13 +11,16 @@ import Image from "next/image";
 import { readableTime } from "@/types/middleware";
 import PlayList from "@/components/playlist";
 import Cookies from "js-cookie";
+import { useSession } from "next-auth/react";
 
 const Watch = ({ SingleData }: GetSingleData) => {
   const { data } = useGetCommentsQuery(SingleData?.id, {
     refetchOnMountOrArgChange: true,
     pollingInterval: 1000,
   });
+  const { data: session } = useSession();
   const [comment, setComment] = useState<string>("");
+  const [cancel, setCancel] = useState<boolean>(false);
   const [postComment] = usePostCommentMutation();
   const token = Cookies.get("auth");
   const handleCommentChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -40,6 +43,7 @@ const Watch = ({ SingleData }: GetSingleData) => {
       e.target.reset();
     }
   };
+
   return (
     <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 w-4/5 sm:mx-auto pt-12">
       <div className="lg:col-span-8">
@@ -57,34 +61,65 @@ const Watch = ({ SingleData }: GetSingleData) => {
           </h1>
         </div>
         <form onSubmit={handleCommentSubmit}>
-          <div className="w-full pt-12">
-            <Input
-              type="text"
-              variant="underlined"
-              placeholder="Add a comment"
-              onChange={handleCommentChange}
-            />
+          <div className="mt-6">
+            <h1 className="text-lg">{data?.data.length} Comments</h1>
           </div>
-          <div className="pt-4 flex justify-end">
-            {comment.length > 0 ? (
-              <Button type="submit" color="primary">
-                Comment
-              </Button>
-            ) : (
-              <Button isDisabled color="primary">
-                Comment
-              </Button>
-            )}
+          <div className="flex items-center gap-4 py-4">
+            <div>
+              <Image
+                src={
+                  session?.user
+                    ? `${session?.user?.image}`
+                    : "https://theme4press.com/wp-content/uploads/2015/11/featured-small-circular.jpg"
+                }
+                width={45}
+                height={45}
+                alt=""
+                className="rounded-full"
+              />
+            </div>
+            <div className="w-full">
+              <Input
+                type="text"
+                variant="underlined"
+                placeholder="Add a comment"
+                onClick={() => setCancel(true)}
+                onChange={handleCommentChange}
+              />
+            </div>
           </div>
+          {cancel ? (
+            <div className="pt-4 flex justify-end">
+              {session?.user && comment.length > 0 ? (
+                <div className="flex items-center gap-4">
+                  <Button onClick={()=>setCancel(false)} color="default" variant="light">
+                    Cancel
+                  </Button>
+                  <Button type="submit" color="primary">
+                    Comment
+                  </Button>
+                </div>
+              ) : (
+                <div className="flex items-center gap-4">
+                  <Button onClick={()=>setCancel(false)} color="default" variant="light">
+                    Cancel
+                  </Button>
+                  <Button isDisabled color="primary">
+                    Comment
+                  </Button>
+                </div>
+              )}
+            </div>
+          ) : undefined}
         </form>
-        <section className="pt-12">
+        <section className="pt-4">
           {data?.data.map((item: IComments) => (
             <div className="flex items-center gap-4 mb-4" key={item?.id}>
               <div>
                 <Image
                   src={item?.image}
-                  width={40}
-                  height={40}
+                  width={45}
+                  height={45}
                   alt=""
                   className="rounded-full"
                 />
