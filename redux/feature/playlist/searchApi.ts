@@ -1,6 +1,4 @@
 import { api } from "@/redux/api/apiSlice";
-import Cookies from "js-cookie";
-const auth: any = Cookies.get("auth");
 const searchApi = api.injectEndpoints({
   endpoints: (builder) => ({
     getSearchVideo: builder.query({
@@ -12,16 +10,19 @@ const searchApi = api.injectEndpoints({
       providesTags: ["All"],
     }),
     postComment: builder.mutation({
-      query: ({ data }) => ({
+      query: ({ data, token }) => ({
         url: "/comments",
         method: "POST",
         body: data,
         headers: {
-          Authorization: `${auth}`,
-          "Content-Type": "application/json",
+          Authorization: token,
         },
       }),
       invalidatesTags: ["All"],
+    }),
+    getComments: builder.query({
+      query: (id) => `/comments/${id}`,
+      providesTags: ["All"],
     }),
   }),
 });
@@ -30,4 +31,5 @@ export const {
   useGetSearchVideoQuery,
   usePostCommentMutation,
   useGetAllPlaylistsQuery,
+  useGetCommentsQuery,
 } = searchApi;

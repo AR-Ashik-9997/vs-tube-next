@@ -3,7 +3,6 @@
 import Layout from "@/layouts/default";
 import React, { ReactElement } from "react";
 import Vmcard from "@/components/vmcard";
-import { GetServerSideProps } from "next";
 import { SessionProvider, useSession } from "next-auth/react";
 import axios from "axios";
 import Cookies from "js-cookie";

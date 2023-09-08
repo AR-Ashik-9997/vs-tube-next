@@ -4,15 +4,22 @@ import { GetServerSideProps } from "next";
 import { GetSingleData, IComments } from "@/types/globalTypes";
 import { Button, Input } from "@nextui-org/react";
 import {
+  useGetCommentsQuery,
   usePostCommentMutation,
 } from "@/redux/feature/playlist/searchApi";
 import Image from "next/image";
 import { readableTime } from "@/types/middleware";
 import PlayList from "@/components/playlist";
+import Cookies from "js-cookie";
 
 const Watch = ({ SingleData }: GetSingleData) => {
-  const [comment, setComment] = useState<string>(""); 
+  const { data } = useGetCommentsQuery(SingleData?.id, {
+    refetchOnMountOrArgChange: true,
+    pollingInterval: 1000,
+  });
+  const [comment, setComment] = useState<string>("");
   const [postComment] = usePostCommentMutation();
+  const token = Cookies.get("auth");
   const handleCommentChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const comment = event.target.value;
     if (comment.length > 0) {
@@ -24,18 +31,15 @@ const Watch = ({ SingleData }: GetSingleData) => {
   const handleCommentSubmit = (e: any) => {
     e.preventDefault();
     const options = {
-      data: {
-        playlistId: SingleData.id,
-        comment: comment,
-      },
+      playlistId: SingleData.id,
+      comment: comment,
     };
     if (comment.length > 0) {
-      postComment(options);
+      postComment({ data: options, token });
       setComment("");
       e.target.reset();
     }
   };
-
   return (
     <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 w-4/5 sm:mx-auto pt-12">
       <div className="lg:col-span-8">
@@ -74,20 +78,20 @@ const Watch = ({ SingleData }: GetSingleData) => {
           </div>
         </form>
         <section className="pt-12">
-          {SingleData?.comments.map((item: IComments) => (
-            <div className="flex items-center gap-4" key={item?.id}>
+          {data?.data.map((item: IComments) => (
+            <div className="flex items-center gap-4 mb-4" key={item?.id}>
               <div>
                 <Image
-                  src="https://theme4press.com/wp-content/uploads/2015/11/featured-small-circular.jpg"
-                  width={50}
-                  height={50}
+                  src={item?.image}
+                  width={40}
+                  height={40}
                   alt=""
                   className="rounded-full"
                 />
               </div>
               <div>
                 <div className="flex items-center gap-4">
-                  <p>name</p>
+                  <p>{item?.username}</p>
                   <p>{readableTime(item?.updatedAt)}</p>
                 </div>
                 <p>{item?.comment}</p>

@@ -13,12 +13,6 @@ export type GetSingleData = {
     image: string;
     video: string;
     title: string;
-    comments: {
-      id: string;
-      comment: string;
-      playlistId: string;
-      updatedAt: string;
-    }[];
   };
 };
 
@@ -34,5 +28,7 @@ export type IComments = {
   id: string;
   comment: string;
   playlistId: string;
+  username: string;
+  image: string;
   updatedAt: string;
 };
