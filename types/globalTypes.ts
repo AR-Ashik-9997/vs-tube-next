@@ -15,7 +15,9 @@ export type GetSingleData = {
     title: string;
   };
 };
-
+export type GetSearchResult = {
+  SearchResult: { data: [] };
+};
 export type IUser = {
   users: {
     id: string;

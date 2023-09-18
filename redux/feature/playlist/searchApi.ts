@@ -1,10 +1,6 @@
 import { api } from "@/redux/api/apiSlice";
 const searchApi = api.injectEndpoints({
   endpoints: (builder) => ({
-    getSearchVideo: builder.query({
-      query: (searchTerm) => `/play_lists/?searchTerm=${searchTerm}`,
-      providesTags: ["All"],
-    }),
     getAllPlaylists: builder.query({
       query: () => `/play_lists`,
       providesTags: ["All"],
@@ -28,7 +24,6 @@ const searchApi = api.injectEndpoints({
 });
 
 export const {
-  useGetSearchVideoQuery,
   usePostCommentMutation,
   useGetAllPlaylistsQuery,
   useGetCommentsQuery,

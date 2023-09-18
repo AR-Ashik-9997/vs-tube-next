@@ -14,35 +14,36 @@ import {
 import NextLink from "next/link";
 import { MoonFilledIcon, SearchIcon, SunFilledIcon } from "@/components/icons";
 import { Logo } from "@/components/icons";
-import { useGetSearchVideoQuery } from "@/redux/feature/playlist/searchApi";
-import { useAppDispatch, useAppSelector } from "@/redux/hooks/hooks";
-import {
-  setSearch,
-  setSearchData,
-} from "@/redux/feature/playlist/playListSlice";
 import React, { useEffect, useState } from "react";
 import { useSession, signOut } from "next-auth/react";
 import Link from "next/link";
 import { useTheme } from "next-themes";
 import Cookies from "js-cookie";
+import { useRouter } from "next/router";
 
 export const Navbar = () => {
-  const { searchTerm } = useAppSelector((state) => state.playlist);
+  const router=useRouter();
+  const [search, setSearch] = useState<string>("");
   const { data: session } = useSession();
   const { systemTheme, theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
-  const dispatch = useAppDispatch();
-  const { data } = useGetSearchVideoQuery(searchTerm, {
-    refetchOnMountOrArgChange: true,
-    pollingInterval: 1000,
-  });
+
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const search = event.target.value;
-    dispatch(setSearch(search));
+    if (search.length > 0) {
+      setSearch(search);
+    } else {
+      setSearch("");
+    }
   };
-  if (data?.data.length > 0) {
-    dispatch(setSearchData(data?.data));
-  }
+  const handleSubmit = (e: any) => {
+    e.preventDefault();
+    if(search){
+      router.push(`/searches/${search}`);
+    }
+    
+  };
+
   useEffect(() => {
     setMounted(true);
   }, []);
@@ -82,27 +83,28 @@ export const Navbar = () => {
         justify="center"
       >
         <NavbarItem className="hidden md:flex w-1/2">
-          <Input
-            aria-label="Search"
-            classNames={{
-              inputWrapper: "bg-default-100",
-              input: "text-sm",
-            }}
-            endContent={
-              <Kbd className="hidden lg:inline-block" keys={["command"]}>
-                K
-              </Kbd>
-            }
-            labelPlacement="outside"
-            placeholder="Search..."
-            startContent={
-              <SearchIcon className="text-base text-default-400 pointer-events-none flex-shrink-0" />
-            }
-            type="text"
-            name="search"
-            value={searchTerm}
-            onChange={handleSearchChange}
-          />
+          <form onSubmit={handleSubmit} className="w-full">
+            <Input
+              aria-label="Search"
+              classNames={{
+                inputWrapper: "bg-default-200",
+                input: "text-sm",
+              }}
+              endContent={
+                <Kbd className="hidden lg:inline-block" keys={["command"]}>
+                  K
+                </Kbd>
+              }
+              labelPlacement="outside"
+              placeholder="Search..."
+              startContent={
+                <SearchIcon className="text-base text-default-400 pointer-events-none flex-shrink-0" />
+              }
+              type="text"
+              name="search"
+              onChange={handleSearchChange}
+            />
+          </form>
         </NavbarItem>
       </NavbarContent>
       {renderThemeChanger()}

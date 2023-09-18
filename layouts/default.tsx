@@ -1,6 +1,7 @@
 import { Navbar } from "@/components/navbar";
 import { Link } from "@nextui-org/link";
-import { useSession } from "next-auth/react";
+
+
 
 export default function DefaultLayout({
   children,
@@ -19,7 +20,7 @@ export default function DefaultLayout({
           title="nextui.org homepage"
         >
           <span className="text-default-600">Powered by</span>
-          <p className="text-primary">NextUI</p>
+          <p className="text-primary">VS-TUBE</p>
         </Link>
       </footer>
     </div>
