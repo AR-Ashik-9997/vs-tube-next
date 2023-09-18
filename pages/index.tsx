@@ -6,6 +6,7 @@ import Vmcard from "@/components/vmcard";
 import { SessionProvider, useSession } from "next-auth/react";
 import axios from "axios";
 import Cookies from "js-cookie";
+import Head from "next/head";
 
 const index = () => {
   const { data: session } = useSession();
@@ -21,7 +22,7 @@ const index = () => {
       .catch((err) => console.log(err));
   }
   return (
-    <section>
+    <section>     
       <Vmcard />
     </section>
   );
