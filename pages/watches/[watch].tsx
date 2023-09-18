@@ -2,7 +2,8 @@ import React, { ReactElement, useState } from "react";
 import Layout from "@/layouts/default";
 import { GetServerSideProps } from "next";
 import { GetSingleData, IComments } from "@/types/globalTypes";
-import { Button, Input } from "@nextui-org/react";
+import { Button, ButtonGroup, Input } from "@nextui-org/react";
+import { BiSolidLike, BiSolidDislike } from "react-icons/bi";
 import {
   useGetCommentsQuery,
   usePostCommentMutation,
@@ -12,6 +13,8 @@ import { readableTime } from "@/types/middleware";
 import PlayList from "@/components/playlist";
 import Cookies from "js-cookie";
 import { useSession } from "next-auth/react";
+import officalImage from "../../public/official.png";
+import veryfied from "../../public/correct.png";
 
 const Watch = ({ SingleData }: GetSingleData) => {
   const { data } = useGetCommentsQuery(SingleData?.id, {
@@ -60,6 +63,48 @@ const Watch = ({ SingleData }: GetSingleData) => {
             {SingleData?.title}
           </h1>
         </div>
+        <section className="pt-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <div>
+                <Image
+                  src={officalImage}
+                  width={50}
+                  height={50}
+                  alt="officaial image"
+                  className="rounded-full"
+                />
+              </div>
+              <div>
+                <div className="flex items-center gap-1">
+                  <h1 className="text-lg">VsTube Songs</h1>
+                  <Image
+                    src={veryfied}
+                    width={20}
+                    height={20}
+                    alt="officaial image"
+                    className="rounded-full"
+                    title="verified"
+                  />
+                </div>
+                <p>10 viwers</p>
+              </div>
+            </div>
+            <div>
+              <ButtonGroup>
+                <Button>
+                  <BiSolidLike className="text-2xl" />
+                  10K
+                </Button>
+                <Button>
+                  <BiSolidDislike className="text-2xl" />
+                  20K
+                </Button>
+              </ButtonGroup>
+            </div>
+          </div>
+        </section>
+
         <form onSubmit={handleCommentSubmit}>
           <div className="mt-6">
             <h1 className="text-lg">{data?.data.length} Comments</h1>
@@ -92,7 +137,11 @@ const Watch = ({ SingleData }: GetSingleData) => {
             <div className="pt-4 flex justify-end">
               {session?.user && comment.length > 0 ? (
                 <div className="flex items-center gap-4">
-                  <Button onClick={()=>setCancel(false)} color="default" variant="light">
+                  <Button
+                    onClick={() => setCancel(false)}
+                    color="default"
+                    variant="light"
+                  >
                     Cancel
                   </Button>
                   <Button type="submit" color="primary">
@@ -101,7 +150,11 @@ const Watch = ({ SingleData }: GetSingleData) => {
                 </div>
               ) : (
                 <div className="flex items-center gap-4">
-                  <Button onClick={()=>setCancel(false)} color="default" variant="light">
+                  <Button
+                    onClick={() => setCancel(false)}
+                    color="default"
+                    variant="light"
+                  >
                     Cancel
                   </Button>
                   <Button isDisabled color="primary">
