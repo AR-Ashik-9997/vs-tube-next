@@ -6,7 +6,9 @@ import { Button, ButtonGroup, Input } from "@nextui-org/react";
 import { BiSolidLike, BiSolidDislike } from "react-icons/bi";
 import {
   useGetCommentsQuery,
+  useGetUserReactionsQuery,
   usePostCommentMutation,
+  usePostUserReactionsMutation,
 } from "@/redux/feature/playlist/searchApi";
 import Image from "next/image";
 import { readableTime } from "@/types/middleware";
@@ -17,7 +19,11 @@ import officalImage from "../../public/official.png";
 import veryfied from "../../public/correct.png";
 
 const Watch = ({ SingleData }: GetSingleData) => {
-  const { data } = useGetCommentsQuery(SingleData?.id, {
+  const { data: comments } = useGetCommentsQuery(SingleData?.id, {
+    refetchOnMountOrArgChange: true,
+    pollingInterval: 1000,
+  });
+  const { data: reactions } = useGetUserReactionsQuery(SingleData?.id, {
     refetchOnMountOrArgChange: true,
     pollingInterval: 1000,
   });
@@ -25,6 +31,7 @@ const Watch = ({ SingleData }: GetSingleData) => {
   const [comment, setComment] = useState<string>("");
   const [cancel, setCancel] = useState<boolean>(false);
   const [postComment] = usePostCommentMutation();
+  const [postReaction] = usePostUserReactionsMutation();
   const token = Cookies.get("auth");
   const handleCommentChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const comment = event.target.value;
@@ -44,6 +51,23 @@ const Watch = ({ SingleData }: GetSingleData) => {
       postComment({ data: options, token });
       setComment("");
       e.target.reset();
+    }
+  };
+
+  const handleReact = (react: string) => {
+    if (react === "like") {     
+      const options = {
+        playlistId: SingleData.id,
+        likes: "1",
+      };
+      console.log(options);
+      postReaction({ data: options, token });
+    } else {      
+      const options = {
+        playlistId: SingleData.id,
+        dislikes: "1",
+      };
+      postReaction({ data: options, token });
     }
   };
 
@@ -92,13 +116,16 @@ const Watch = ({ SingleData }: GetSingleData) => {
             </div>
             <div>
               <ButtonGroup>
-                <Button>
+                <Button onClick={() => handleReact("like")} title="I like this">
                   <BiSolidLike className="text-2xl" />
-                  10K
+                  {reactions?.data?.likes}
                 </Button>
-                <Button>
+                <Button
+                  onClick={() => handleReact("dislike")}
+                  title="I dislike this"
+                >
                   <BiSolidDislike className="text-2xl" />
-                  20K
+                  {reactions?.data?.dislikes}
                 </Button>
               </ButtonGroup>
             </div>
@@ -107,7 +134,7 @@ const Watch = ({ SingleData }: GetSingleData) => {
 
         <form onSubmit={handleCommentSubmit}>
           <div className="mt-6">
-            <h1 className="text-lg">{data?.data.length} Comments</h1>
+            <h1 className="text-lg">{comments?.data.length} Comments</h1>
           </div>
           <div className="flex items-center gap-4 py-4">
             <div>
@@ -166,7 +193,7 @@ const Watch = ({ SingleData }: GetSingleData) => {
           ) : undefined}
         </form>
         <section className="pt-4">
-          {data?.data.map((item: IComments) => (
+          {comments?.data.map((item: IComments) => (
             <div className="flex items-center gap-4 mb-4" key={item?.id}>
               <div>
                 <Image
