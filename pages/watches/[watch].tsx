@@ -55,14 +55,14 @@ const Watch = ({ SingleData }: GetSingleData) => {
   };
 
   const handleReact = (react: string) => {
-    if (react === "like") {     
+    if (react === "like") {
       const options = {
         playlistId: SingleData.id,
         likes: "1",
       };
       console.log(options);
       postReaction({ data: options, token });
-    } else {      
+    } else {
       const options = {
         playlistId: SingleData.id,
         dislikes: "1",
@@ -72,7 +72,7 @@ const Watch = ({ SingleData }: GetSingleData) => {
   };
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 w-4/5 sm:mx-auto pt-12">
+    <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 w-full md:w-4/5 sm:mx-auto pt-12">
       <div className="lg:col-span-8">
         <div className="relative overflow-hidden w-full pt-[56.25%]">
           <iframe
@@ -83,49 +83,53 @@ const Watch = ({ SingleData }: GetSingleData) => {
           ></iframe>
         </div>
         <div className="pt-4">
-          <h1 className="text-xs xl:text-xl 2xl:text-2xl">
+          <h1 className="text-sm xl:text-xl 2xl:text-2xl">
             {SingleData?.title}
           </h1>
         </div>
         <section className="pt-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
+          <div className="flex items-center justify-between flex-wrap">
+            <div className="flex items-center md:gap-4">
               <div>
                 <Image
                   src={officalImage}
                   width={50}
                   height={50}
                   alt="officaial image"
-                  className="rounded-full"
+                  className="rounded-full w-3/4 md:w-full"
                 />
               </div>
               <div>
                 <div className="flex items-center gap-1">
-                  <h1 className="text-lg">VsTube Songs</h1>
+                  <h1 className="text-sm md:text-lg">VsTube Songs</h1>
                   <Image
                     src={veryfied}
                     width={20}
                     height={20}
                     alt="officaial image"
-                    className="rounded-full"
                     title="verified"
                   />
                 </div>
-                <p>10 viwers</p>
+                <p className="text-xs md:text-md">10 viwers</p>
               </div>
             </div>
             <div>
               <ButtonGroup>
-                <Button onClick={() => handleReact("like")} title="I like this">
+                <Button
+                  onClick={() => handleReact("like")}
+                  title="I like this"
+                  className="flex items-center"
+                >
                   <BiSolidLike className="text-2xl" />
-                  {reactions?.data?.likes}
+                  {reactions?.data?.likes ? reactions?.data?.likes : 0}
                 </Button>
                 <Button
                   onClick={() => handleReact("dislike")}
                   title="I dislike this"
+                  className="flex items-center"
                 >
                   <BiSolidDislike className="text-2xl" />
-                  {reactions?.data?.dislikes}
+                  {reactions?.data?.dislikes ? reactions?.data?.dislikes : 0}
                 </Button>
               </ButtonGroup>
             </div>
