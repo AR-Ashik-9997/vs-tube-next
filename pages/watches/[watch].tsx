@@ -6,6 +6,7 @@ import { Button, ButtonGroup, Input } from "@nextui-org/react";
 import { BiSolidLike, BiSolidDislike } from "react-icons/bi";
 import {
   useGetCommentsQuery,
+  useGetPlaylistViewsQuery,
   useGetUserReactionsQuery,
   usePostCommentMutation,
   usePostUserReactionsMutation,
@@ -24,6 +25,10 @@ const Watch = ({ SingleData }: GetSingleData) => {
     pollingInterval: 1000,
   });
   const { data: reactions } = useGetUserReactionsQuery(SingleData?.id, {
+    refetchOnMountOrArgChange: true,
+    pollingInterval: 1000,
+  });
+  const { data: views } = useGetPlaylistViewsQuery(SingleData?.id, {
     refetchOnMountOrArgChange: true,
     pollingInterval: 1000,
   });
@@ -110,7 +115,7 @@ const Watch = ({ SingleData }: GetSingleData) => {
                     title="verified"
                   />
                 </div>
-                <p className="text-xs md:text-md">10 viwers</p>
+                <p className="text-xs md:text-base">{views?.data?.view} viwes</p>
               </div>
             </div>
             <div>

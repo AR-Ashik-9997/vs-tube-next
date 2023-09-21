@@ -35,6 +35,10 @@ const searchApi = api.injectEndpoints({
       query: (id) => `/reactions/${id}`,
       providesTags: ["All"],
     }),
+    getPlaylistViews: builder.query({
+      query: (id) => `/play_lists/views/${id}`,
+      providesTags: ["All"],
+    }),
   }),
 });
 
@@ -44,4 +48,5 @@ export const {
   useGetCommentsQuery,
   usePostUserReactionsMutation,
   useGetUserReactionsQuery,
+  useGetPlaylistViewsQuery,
 } = searchApi;
