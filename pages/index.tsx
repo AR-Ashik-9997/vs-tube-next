@@ -6,10 +6,11 @@ import Vmcard from "@/components/vmcard";
 import { SessionProvider, useSession } from "next-auth/react";
 import axios from "axios";
 import Cookies from "js-cookie";
-import Head from "next/head";
+import { useUserLoginMutation } from "@/redux/feature/playlist/searchApi";
 
 const index = () => {
-  const { data: session } = useSession();
+  const [userLogin] = useUserLoginMutation();
+  const { data: session } = useSession(); 
   if (session?.user) {
     axios
       .post(`${process.env.DB_HOST}/auth`, {

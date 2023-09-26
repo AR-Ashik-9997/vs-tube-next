@@ -11,7 +11,7 @@ const PlayList = () => {
 
   return (
     <React.Fragment>
-      {data?.data?.map((item: IPlayList) => (
+      {data?.map((item: IPlayList) => (
         <Link href={`/watches/${item.id}`} key={item?.id}>
           <div className="flex gap-4 mt-4">
             <Image

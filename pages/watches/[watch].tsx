@@ -46,33 +46,32 @@ const Watch = ({ SingleData }: GetSingleData) => {
       setComment("");
     }
   };
-  const handleCommentSubmit = (e: any) => {
+  const handleCommentSubmit = async(e: any) => {
     e.preventDefault();
     const options = {
       playlistId: SingleData.id,
       comment: comment,
     };
     if (comment.length > 0) {
-      postComment({ data: options, token });
+      await postComment({...options});
       setComment("");
       e.target.reset();
     }
   };
 
-  const handleReact = (react: string) => {
+  const handleReact = async(react: string) => {
     if (react === "like") {
       const options = {
         playlistId: SingleData.id,
         likes: "1",
       };
-      console.log(options);
-      postReaction({ data: options, token });
+      await postReaction({...options});
     } else {
       const options = {
         playlistId: SingleData.id,
         dislikes: "1",
       };
-      postReaction({ data: options, token });
+     await postReaction({...options});
     }
   };
 
@@ -115,7 +114,9 @@ const Watch = ({ SingleData }: GetSingleData) => {
                     title="verified"
                   />
                 </div>
-                <p className="text-xs md:text-base">{views?.data?.view} viwes</p>
+                <p className="text-xs md:text-base">
+                  {views?.data?.view} viwes
+                </p>
               </div>
             </div>
             <div>
@@ -126,7 +127,7 @@ const Watch = ({ SingleData }: GetSingleData) => {
                   className="flex items-center"
                 >
                   <BiSolidLike className="text-2xl" />
-                  {reactions?.data?.likes ? reactions?.data?.likes : 0}
+                  {reactions?.likes ? reactions?.likes : 0}
                 </Button>
                 <Button
                   onClick={() => handleReact("dislike")}
@@ -134,7 +135,7 @@ const Watch = ({ SingleData }: GetSingleData) => {
                   className="flex items-center"
                 >
                   <BiSolidDislike className="text-2xl" />
-                  {reactions?.data?.dislikes ? reactions?.data?.dislikes : 0}
+                  {reactions?.dislikes ? reactions?.dislikes : 0}
                 </Button>
               </ButtonGroup>
             </div>
@@ -143,7 +144,7 @@ const Watch = ({ SingleData }: GetSingleData) => {
 
         <form onSubmit={handleCommentSubmit}>
           <div className="mt-6">
-            <h1 className="text-lg">{comments?.data.length} Comments</h1>
+            <h1 className="text-lg">{comments?.length} Comments</h1>
           </div>
           <div className="flex items-center gap-4 py-4">
             <div>
@@ -202,7 +203,7 @@ const Watch = ({ SingleData }: GetSingleData) => {
           ) : undefined}
         </form>
         <section className="pt-4">
-          {comments?.data.map((item: IComments) => (
+          {comments?.map((item: IComments) => (
             <div className="flex items-center gap-4 mb-4" key={item?.id}>
               <div>
                 <Image
