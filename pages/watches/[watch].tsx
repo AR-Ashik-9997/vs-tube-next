@@ -2,7 +2,15 @@ import React, { ReactElement, useState } from "react";
 import Layout from "@/layouts/default";
 import { GetServerSideProps } from "next";
 import { GetSingleData, IComments } from "@/types/globalTypes";
-import { Button, ButtonGroup, Input } from "@nextui-org/react";
+import {
+  Button,
+  ButtonGroup,
+  Input,
+  Modal,
+  ModalContent,
+  ModalHeader,
+  useDisclosure,
+} from "@nextui-org/react";
 import { BiSolidLike, BiSolidDislike } from "react-icons/bi";
 import {
   useGetCommentsQuery,
@@ -32,6 +40,8 @@ const Watch = ({ SingleData }: GetSingleData) => {
     refetchOnMountOrArgChange: true,
     pollingInterval: 1000,
   });
+
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const { data: session } = useSession();
   const [comment, setComment] = useState<string>("");
   const [cancel, setCancel] = useState<boolean>(false);
@@ -46,32 +56,32 @@ const Watch = ({ SingleData }: GetSingleData) => {
       setComment("");
     }
   };
-  const handleCommentSubmit = async(e: any) => {
+  const handleCommentSubmit = async (e: any) => {
     e.preventDefault();
     const options = {
       playlistId: SingleData.id,
       comment: comment,
     };
     if (comment.length > 0) {
-      await postComment({...options});
+      await postComment({ ...options });
       setComment("");
       e.target.reset();
     }
   };
 
-  const handleReact = async(react: string) => {
+  const handleReact = async (react: string) => {
     if (react === "like") {
       const options = {
         playlistId: SingleData.id,
         likes: "1",
       };
-      await postReaction({...options});
+      await postReaction({ ...options });
     } else {
       const options = {
         playlistId: SingleData.id,
         dislikes: "1",
       };
-     await postReaction({...options});
+      await postReaction({ ...options });
     }
   };
 
@@ -194,7 +204,7 @@ const Watch = ({ SingleData }: GetSingleData) => {
                   >
                     Cancel
                   </Button>
-                  <Button isDisabled color="primary">
+                  <Button onPress={onOpen} color="primary">
                     Comment
                   </Button>
                 </div>
@@ -229,6 +239,15 @@ const Watch = ({ SingleData }: GetSingleData) => {
         <div className="max-h-96 lg:max-h-80 xl:max-h-96 2xl:max-h-[34rem] border rounded-xl p-4 overflow-y-scroll outline-none">
           <PlayList />
         </div>
+      </div>
+      <div>
+        <Modal isOpen={isOpen} placement="center" onOpenChange={onOpenChange}>
+          <ModalContent>
+            <ModalHeader className="flex flex-col gap-1">
+              Please Login befor commit
+            </ModalHeader>
+          </ModalContent>
+        </Modal>
       </div>
     </div>
   );
