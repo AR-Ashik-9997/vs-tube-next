@@ -29,7 +29,7 @@ export default function MyApp({ Component, pageProps }: AppPropsWithLayout) {
         </NextUIProvider>
       </SessionProvider>
     </Provider>
-  );
+  )
 }
 
 export const fonts = {
